@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::helper::read_integer_file;
 
 pub fn find_difference(filepath: &str) -> i32 {
-    let mut lists = read_integer_file::read_file(filepath).unwrap();
+    let mut lists = read_integer_file::read_file_columns(filepath);
 
     for vec in &mut lists {
         vec.sort();
@@ -18,7 +18,7 @@ pub fn find_difference(filepath: &str) -> i32 {
 }
 
 pub fn find_similarity(filepath: &str) -> i32 {
-    let lists = read_integer_file::read_file(filepath).unwrap();
+    let lists = read_integer_file::read_file_columns(filepath);
 
     let mut reference_list: HashMap<i32, i32> = HashMap::default();
     let mut second_list: HashMap<i32, i32> = HashMap::default();

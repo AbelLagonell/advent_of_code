@@ -1,11 +1,14 @@
-mod calendar_2024;
-mod helper;
+mod calendar_2024 {
+    pub mod dec_2;
+}
 
-use calendar_2024::dec_1;
+use crate::calendar_2024::dec_2;
+
+mod helper;
 
 fn main() {
     println!(
-        "{:?}",
-        dec_1::find_similarity("./src/calendar_2024/dec_1_input.txt")
+        "{}",
+        dec_2::record_safety("src/calendar_2024/dec_2_txt/dec_2_input.txt")
     );
 }

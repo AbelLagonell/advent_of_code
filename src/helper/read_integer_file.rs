@@ -2,7 +2,7 @@ use std::fs;
 
 const VECFALSE: usize = 10000;
 
-pub fn read_file(filepath: &str) -> Result<Vec<Vec<i32>>, &str> {
+pub fn read_file_columns(filepath: &str) -> Vec<Vec<i32>> {
     let mut parsed = Vec::<Vec<i32>>::new();
 
     let mut _contents = fs::read_to_string(filepath)
@@ -37,12 +37,46 @@ pub fn read_file(filepath: &str) -> Result<Vec<Vec<i32>>, &str> {
         }
     }
 
-    let vec1_len = parsed[0].len();
-    for vec in &parsed {
-        if vec.len() != vec1_len {
-            return Err("Data is not the same size");
+    return parsed;
+}
+
+pub fn read_file_rows(filepath: &str) -> Vec<Vec<i32>> {
+    let mut parsed = Vec::<Vec<i32>>::new();
+
+    let mut _contents = fs::read_to_string(filepath)
+        .expect("Should have been able to read file")
+        .to_string();
+
+    let mut first = 0;
+    let mut vec_index: usize = 0;
+    let mut start = true;
+    for (i, c) in _contents.chars().enumerate() {
+        if c.is_numeric() && !_contents.chars().nth(first).unwrap().is_numeric() {
+            first = i;
+        } else if !c.is_numeric() && c != _contents.chars().nth(first).unwrap() {
+            let mut s = "".to_owned();
+            for j in first..i {
+                s.push(_contents.chars().nth(j).unwrap());
+            }
+            let integer: i32 = s.parse().unwrap();
+
+            first = i;
+
+            if start {
+                let mut new_vec = Vec::<i32>::new();
+                new_vec.push(integer);
+                parsed.push(new_vec);
+                start = false;
+            } else {
+                parsed[vec_index].push(integer);
+            }
+        }
+
+        if c == '\n' {
+            vec_index += 1;
+            start = true;
         }
     }
 
-    return Ok(parsed);
+    return parsed;
 }
