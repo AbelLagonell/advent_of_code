@@ -40,12 +40,8 @@ pub fn read_file_columns(filepath: &str) -> Vec<Vec<i32>> {
     return parsed;
 }
 
-pub fn read_file_rows(filepath: &str) -> Vec<Vec<i32>> {
+pub fn read_file_rows(_contents: &str) -> Vec<Vec<i32>> {
     let mut parsed = Vec::<Vec<i32>>::new();
-
-    let mut _contents = fs::read_to_string(filepath)
-        .expect("Should have been able to read file")
-        .to_string();
 
     let mut first = 0;
     let mut vec_index: usize = 0;
