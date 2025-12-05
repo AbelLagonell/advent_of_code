@@ -54,21 +54,21 @@ impl Tally {
                 let n = i.to_string();
                 let mut r = 1;
                 let d = n.len();
-                while d/r >= 2{
+                while d / r >= 2 {
                     let tp = n[0..r].to_string();
-                    let tp2 = n[n.len()-r..n.len()].to_string();
+                    let tp2 = n[n.len() - r..n.len()].to_string();
                     // println!("with number: {} is {} == {}? {}", i, tp, tp2, tp==tp2);
-                    if tp != tp2{
+                    if tp != tp2 {
                         r += 1;
                         continue;
                     }
-                    let divisor = Self::build_divisor(r-1, d/r-1);
-                    if i % divisor == 0{
+                    let divisor = Self::build_divisor(r - 1, d / r - 1);
+                    if i % divisor == 0 {
                         self.running_total += i;
                         println!("Pattern Number {} with {}", i, divisor);
                         break;
                     }
-                    r+= 1;
+                    r += 1;
                 }
             }
         }
@@ -76,11 +76,11 @@ impl Tally {
         self.running_total
     }
 
-    fn build_divisor(z:usize, i:usize)-> u64{
+    fn build_divisor(z: usize, i: usize) -> u64 {
         let mut string: String = "".to_string();
-        for _ in 0..i{
+        for _ in 0..i {
             string += "1";
-            for _ in 0..z{
+            for _ in 0..z {
                 string += "0";
             }
         }
@@ -89,8 +89,47 @@ impl Tally {
         string.parse().unwrap()
     }
 
+    fn run3(&mut self, extension: String) -> u64 {
+        let results = self.parse_data(extension);
+        for set in results {
+            for i in set.start..(set.end + 1) {
+                let n: String = i.to_string();
+                let mut r = 1;
+                let d = n.len();
+                while d / r >= 2 {
+                    let tp = n[0..r].to_string();
+                    let mut k = 2;
+                    let mut valid: bool = d % r == 0;
+                    if !valid || tp != n[d-r..d].to_string(){
+                        r += 1;
+                        continue;
+                    }
+                    while r * k <= d-r {
+                        // println!("Checking {tp} and {}", n[r * (k - 1)..r * k].to_string());
+                        if tp == n[r * (k - 1)..r * k].to_string() {
+                            k += 1;
+                            continue;
+                        }
+                        valid = false;
+                        break;
+                    }
+                    // println!("\tIs it Valid {valid}");
+                    if !valid {
+                        r += 1;
+                        continue;
+                    }
+                    // println!("\t\tAdding {i}");
+                    self.running_total += i;
+                    break;
+                }
+            }
+        }
+
+        self.running_total
+    }
+
     fn validate(&mut self, valid: u64) -> bool {
-        self.run2("sample".to_string());
+        self.run3("sample".to_string());
         self.running_total == valid
     }
 }
@@ -115,7 +154,7 @@ pub fn test() {
     if tally.validate(4174379265) {
         println!("--------SUCCESS----------");
         tally.running_total = 0;
-        // println!("{}", tally.run2("input".to_string()));
+        println!("{}", tally.run3("input".to_string()));
     } else {
         println!("--------ERROR----------\n{}", tally.running_total);
     }
